@@ -44,4 +44,23 @@ linters.codespell = {
 	},
 }
 
+local function get_python_lint_cmd(linter_name)
+	local local_cmd = vim.fn.fnamemodify('./.venv/bin/' .. linter_name, ':p')
+	local stat = vim.loop.fs_stat(local_cmd)
+
+	if stat then
+		return local_cmd
+	end
+
+	return linter_name
+end
+
+linters.pylint = {
+	cmd = get_python_lint_cmd('pylint'),
+}
+
+linters.mypy = {
+	cmd = get_python_lint_cmd('mypy'),
+}
+
 return linters

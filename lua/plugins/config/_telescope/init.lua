@@ -20,7 +20,7 @@ VIMGREP_ARGUMENTS = {
 }
 
 FILE_IGNORE_PATTERNS = {
-	'node_modules',
+	-- 'node_modules',
 	'vendor',
 	'%.ttf',
 	'%.eof',
@@ -31,6 +31,8 @@ FILE_IGNORE_PATTERNS = {
 	'.venv',
 	'.mypy_cache',
 	'.keep',
+	'test/fixtures',
+	'dist',
 }
 
 local utils = require('core.utils')

@@ -65,6 +65,7 @@ lsp.setup_server = function(server_name)
 	}
 
 	opts = extend('force', user_server_config, opts)
+
 	lspconfig[server_name].setup(opts)
 end
 

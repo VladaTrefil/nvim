@@ -54,14 +54,14 @@ local common_opts = {
 
 local sources = {
 	editor = {
-		{ name = 'ultisnips', priority = 1000 },
+		{ name = 'ultisnips', priority = 2000 },
 		{ name = 'nvim_lsp', priority = 800, entry_filter = cmp_utils.filter_lsp },
 		{ name = 'treesitter', priority = 250 },
 		{ name = 'buffer', priority = 250, option = { get_bufnrs = cmp_utils.get_buffers } },
 		{ name = 'path', priority = 250 },
 	},
 	cmdline = {
-		{ name = 'path', priority = 1000, option = { trailing_slash = true } },
+		{ name = 'path', priority = 600, option = { trailing_slash = true } },
 		{
 			name = 'cmdline',
 			priority = 500,

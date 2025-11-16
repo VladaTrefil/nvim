@@ -49,7 +49,7 @@ return {
 		vim.fn.expand('$XDG_CONFIG_HOME/rubocop/rubocop.yml'),
 		-- config_path(),
 		-- server_argument(),
-		'--server',
+		-- '--server',
 		'--stderr',
 		'--stdin',
 		'$FILENAME',

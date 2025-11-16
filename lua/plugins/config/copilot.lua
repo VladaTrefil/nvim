@@ -7,6 +7,7 @@ end
 -- add function for automatic copilot authentication
 
 copilot.setup({
+	copilot_model = 'claude-4-sonnet',
 	panel = {
 		enabled = true,
 		auto_refresh = false,
@@ -41,6 +42,7 @@ copilot.setup({
 		markdown = true,
 		gitcommit = true,
 		gitrebase = true,
+		ruby = true,
 		sh = function()
 			if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
 				-- disable for .env files
