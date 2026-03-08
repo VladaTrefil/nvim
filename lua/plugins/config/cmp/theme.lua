@@ -24,6 +24,7 @@ local config = {
 	CmpItemMenuBuffer = { bg = cmp_colors.primary_bg, fg = colors.light0 },
 	CmpItemMenuPath = { bg = colors.gray, fg = cmp_colors.primary_bg },
 	CmpItemMenuTreesitter = { bg = colors.green, fg = cmp_colors.primary_bg },
+	CmpItemMenuSassVariables = { bg = colors.bright_purple, fg = cmp_colors.primary_bg },
 }
 
 return config

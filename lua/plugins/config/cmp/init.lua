@@ -15,6 +15,9 @@ cmp.setup(config.editor_opts)
 cmp.setup.cmdline({ '/', '?' }, config.search_opts)
 cmp.setup.cmdline(':', config.cmd_opts)
 
+-- Register the custom source
+cmp.register_source('style_variables', require('plugins.config.cmp.sources.style_variables').new())
+
 vim.api.nvim_create_autocmd('BufWritePost', {
 	pattern = '*.snippets',
 	callback = function()
