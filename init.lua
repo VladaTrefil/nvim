@@ -14,6 +14,8 @@ vim.cmd('source $XDG_CONFIG_HOME/nvim/legacy/script.vim')
 
 require('plugins')
 
+require('rails_test.commands')
+
 require('core.ui.statuscolumn').show()
 
 require('lsp.new')
