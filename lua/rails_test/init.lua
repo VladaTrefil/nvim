@@ -3,7 +3,37 @@ local parser = require('rails_test.parser')
 
 local M = {}
 
-local function handle_result(lines, exit_code)
+local MODULE_TAG = 'rails_test'
+
+-- Resolve a quickfix item's filename to an absolute path, or '' if unknown.
+local function item_abspath(item)
+	local name = item.bufnr and item.bufnr > 0 and vim.fn.bufname(item.bufnr) or ''
+	if name == '' then
+		return ''
+	end
+	return vim.fn.fnamemodify(name, ':p')
+end
+
+-- Merge `new_items` into the quickfix list, removing prior rails_test items
+-- within `scope`. scope == nil means all rails_test items are dropped.
+-- Non-rails_test items are always preserved.
+local function merge_qflist(new_items, scope)
+	local merged = {}
+	for _, item in ipairs(vim.fn.getqflist()) do
+		local is_ours = item.module == MODULE_TAG
+		if not is_ours then
+			table.insert(merged, item)
+		elseif scope and item_abspath(item) ~= scope then
+			table.insert(merged, item)
+		end
+	end
+	for _, item in ipairs(new_items) do
+		table.insert(merged, item)
+	end
+	return merged
+end
+
+local function handle_result(lines, exit_code, scope)
 	local items = parser.parse(lines)
 
 	-- Exit != 0 with no parsed failures likely means a boot/syntax error.
@@ -14,7 +44,11 @@ local function handle_result(lines, exit_code)
 		end
 	end
 
-	vim.fn.setqflist(items, 'r')
+	for _, item in ipairs(items) do
+		item.module = MODULE_TAG
+	end
+
+	vim.fn.setqflist(merge_qflist(items, scope), 'r')
 
 	if #items > 0 then
 		vim.cmd('copen')
@@ -23,7 +57,7 @@ local function handle_result(lines, exit_code)
 	end
 end
 
-local function run(tail_args)
+local function run(tail_args, scope)
 	if vim.fn.executable('bin/rails') ~= 1 then
 		vim.notify('bin/rails not found in cwd', vim.log.levels.ERROR)
 		return
@@ -34,21 +68,37 @@ local function run(tail_args)
 		table.insert(argv, a)
 	end
 
-	runner.start(argv, { on_exit = handle_result })
+	runner.start(argv, {
+		on_exit = function(lines, exit_code)
+			handle_result(lines, exit_code, scope)
+		end,
+	})
+end
+
+-- Scope is an absolute filepath, or nil for "no scope / wipe all rails_test".
+-- An empty expand('%:p') (unnamed buffer) is normalized to nil so we don't
+-- key scope on ''.
+local function current_file_scope()
+	local p = vim.fn.expand('%:p')
+	if p == '' then
+		return nil
+	end
+	return p
 end
 
 function M.run_nearest()
-	local file = vim.fn.expand('%')
+	local relfile = vim.fn.expand('%')
 	local line = vim.fn.line('.')
-	run({ file .. ':' .. line })
+	run({ relfile .. ':' .. line }, current_file_scope())
 end
 
 function M.run_file()
-	run({ vim.fn.expand('%') })
+	local relfile = vim.fn.expand('%')
+	run({ relfile }, current_file_scope())
 end
 
 function M.run_all()
-	run({})
+	run({}, nil)
 end
 
 function M.is_running()
