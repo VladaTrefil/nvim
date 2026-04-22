@@ -63,4 +63,66 @@ Finished in 0.01s
 		end
 		assert.is_true(trace_count >= 0)
 	end)
+
+	it('parses multiple failures in one run', function()
+		local output = [[
+Running:
+
+FF
+
+Failure:
+UserTest#test_a [test/models/user_test.rb:10]:
+boom a
+
+Failure:
+UserTest#test_b [test/models/user_test.rb:20]:
+boom b
+
+]]
+		local items = parser.parse(split(output))
+		assert.are.equal(2, #items)
+		assert.are.equal(10, items[1].lnum)
+		assert.are.equal(20, items[2].lnum)
+	end)
+
+	it('parses a mixed failure + error run', function()
+		local output = [[
+Failure:
+UserTest#test_a [test/models/user_test.rb:10]:
+boom
+
+Error:
+UserTest#test_b:
+RuntimeError: nope
+    test/models/user_test.rb:30:in `block in <class:UserTest>'
+
+]]
+		local items = parser.parse(split(output))
+		-- 1 primary from failure + 1 primary from error (+ 0 trace, path unreadable).
+		assert.are.equal(2, #items)
+		assert.are.equal('test/models/user_test.rb', items[1].filename)
+		assert.are.equal(10, items[1].lnum)
+		assert.are.equal('test/models/user_test.rb', items[2].filename)
+		assert.are.equal(30, items[2].lnum)
+	end)
+
+	it('returns empty list on all-passing output', function()
+		local output = [[
+Running:
+
+...
+
+Finished in 0.05s
+3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
+]]
+		assert.are.same({}, parser.parse(split(output)))
+	end)
+
+	it('returns empty list on garbage input without raising', function()
+		assert.are.same({}, parser.parse({ 'random', 'gibberish', '' }))
+		assert.are.same({}, parser.parse({}))
+		assert.has_no.errors(function()
+			parser.parse({ 'Failure:', 'no bracket here', '', '' })
+		end)
+	end)
 end)
