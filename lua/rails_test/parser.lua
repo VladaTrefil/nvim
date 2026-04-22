@@ -25,7 +25,7 @@ function M.parse(lines)
 				table.insert(items, {
 					filename = path,
 					lnum = tonumber(lnum),
-					text = header .. ' | ' .. table.concat(msg, ' | '),
+					text = #msg > 0 and (header .. ' | ' .. table.concat(msg, ' | ')) or header,
 					type = 'E',
 				})
 			end
@@ -61,11 +61,11 @@ function M.parse(lines)
 				table.insert(items, {
 					filename = primary.path,
 					lnum = primary.lnum,
-					text = header .. ' | ' .. message,
+					text = message ~= '' and (header .. ' | ' .. message) or header,
 					type = 'E',
 				})
 				for _, f in ipairs(frames) do
-					if f ~= primary and vim.fn.filereadable(f.path) == 1 then
+					if f ~= primary and vim.fn.filereadable(f.path) == 1 then -- skip primary; already emitted as 'E' above
 						table.insert(items, {
 							filename = f.path,
 							lnum = f.lnum,
