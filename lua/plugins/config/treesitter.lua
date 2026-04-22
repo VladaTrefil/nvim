@@ -15,6 +15,7 @@ local FILETYPES = {
 	'python',
 	'bash',
 	'scss',
+	'slim',
 
 	-- Markup
 	'json',
@@ -47,7 +48,8 @@ require('nvim-treesitter.configs').setup({
 	-- TODO: Indent is usually wrong, see
 	-- https://github.com/nvim-treesitter/nvim-treesitter/issues/2507
 	indent = {
-		enable = false,
+		enable = true,
+		disable = { 'slim' },
 	},
 
 	highlight = {

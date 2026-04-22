@@ -1,54 +1,32 @@
-local bootstraped = require('plugins.bootstrap')
-local packer_ok, packer = pcall(require, 'packer')
+require('plugins.bootstrap')
 
-if not packer_ok then
-	vim.notify("Packer lua package doesn't exist ")
+local lazy_ok, lazy = pcall(require, 'lazy')
+
+if not lazy_ok then
+	vim.notify("Lazy.nvim doesn't exist")
 	return
 end
 
 local plugins = require('plugins.plugin_list')
 
-local stdpath = vim.fn.stdpath
-local default_compile_path = stdpath('data') .. '/packer_compiled.lua'
+-- add binaries installed by mason.nvim to path
+vim.env.PATH = vim.env.PATH .. ':' .. vim.fn.stdpath('data') .. '/mason/bin'
 
-packer.startup({
-	function(use)
-		for key, plugin in pairs(plugins) do
-			if type(key) == 'string' and not plugin[1] then
-				plugin[1] = key
-			end
-
-			use(plugin)
-		end
-
-		if bootstraped then
-			packer.sync()
-		end
-
-		-- add binaries installed by mason.nvim to path
-		vim.env.PATH = vim.env.PATH .. ':' .. stdpath('data') .. '/mason/bin'
-
-		-- load compiled plugins path if exists
-		local compiled_file, _ = loadfile(default_compile_path)
-		if compiled_file then
-			compiled_file()
-		end
-	end,
-	config = {
-		compile_path = default_compile_path,
-		ensure_dependencies = true,
-		profile = {
-			enable = true,
-			threshold = 0.0001,
+lazy.setup({
+	spec = plugins,
+	-- automatically check for plugin updates
+	checker = { enabled = true },
+	git = {
+		timeout = 300,
+		subcommands = {
+			update = 'pull --rebase',
 		},
-		git = {
-			clone_timeout = 300,
-			subcommands = {
-				update = 'pull --rebase',
-			},
-		},
-		auto_clean = true,
-		compile_on_sync = true,
+	},
+	install = {
+		-- install missing plugins on startup. This doesn't increase startup time.
+		missing = true,
+		-- try to load one of these colorschemes when starting an installation during startup
+		colorscheme = nil,
 	},
 })
 

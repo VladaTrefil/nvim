@@ -92,6 +92,19 @@ M.general = {
 		['<C-Left>'] = { ':vertical resize +10<CR>', 'Resize right' },
 
 		['<Leader>gg'] = { '<cmd>Git<cr>', 'Open git' },
+
+		['<Leader>cp'] = {
+			function()
+				local path = vim.fn.fnamemodify(vim.fn.expand('%'), ':.')
+				local line = vim.fn.line('.')
+				local result = path .. ':' .. line
+
+				vim.fn.system(
+					'echo -n ' .. vim.fn.shellescape(result) .. ' | xclip -selection clipboard'
+				)
+			end,
+			'Copy current file relative path to clipboard',
+		},
 	},
 
 	i = {

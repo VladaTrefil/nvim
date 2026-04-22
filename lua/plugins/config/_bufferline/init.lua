@@ -24,5 +24,13 @@ end
 bufferline.setup({
 	options = {
 		custom_filter = tab_buffers_filter,
+		modified_icon = '●',
+		color_icons = true,
+		diagnostics = 'nvim_lsp',
+		diagnostics_indicator = function(count)
+			return '(' .. count .. ')'
+		end,
+		show_buffer_close_icons = false,
+		show_close_icon = false,
 	},
 })

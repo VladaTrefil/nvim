@@ -38,8 +38,9 @@ FILE_IGNORE_PATTERNS = {
 local utils = require('core.utils')
 local icons = require('core.icons')
 
-local mappings = require('plugins.config._telescope.mappings')
-local theme = require('plugins.config._telescope.theme')
+local mappings = require('plugins.config.telescope_config.mappings')
+local theme = require('plugins.config.telescope_config.theme')
+local telescope_utils = require('plugins.config.telescope_config.utils')
 
 local pickers = {
 	find_files = {
@@ -94,7 +95,7 @@ local extensions = {
 	},
 }
 
-require('plugins.config._telescope.utils').create_autocmds()
+telescope_utils.create_autocmds()
 
 telescope.setup({
 	defaults = {
@@ -135,4 +136,4 @@ telescope.setup({
 utils.load_mappings(mappings.base)
 utils.set_highlights(theme)
 
-require('plugins.config._telescope.utils').load_extension('live_grep_args')
+telescope_utils.load_extension('live_grep_args')

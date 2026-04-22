@@ -1,5 +1,4 @@
 local mason_lspconfig_ok, mason_lspconfig = pcall(require, 'mason-lspconfig')
-local lsp = require('lsp')
 
 require('mason').setup()
 
@@ -23,18 +22,29 @@ mason_lspconfig.setup({
 		-- 'stylua',
 		-- 'tsserver',
 	},
-	automatic_installation = true,
+	automatic_enable = {
+		'lua_ls',
+		'eslint',
+		'yamlls',
+	},
 })
 
-mason_lspconfig.setup_handlers({
-	function(server)
-		if server == 'pylsp' then
-			return
-		end
+for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
+	if server ~= 'pylsp' then
+		vim.lsp.setup(server)
+	end
+end
 
-		lsp.setup(server)
-	end,
-})
+-- Deprecated
+-- mason_lspconfig.setup_handlers({
+-- 	function(server)
+-- 		if server == 'pylsp' then
+-- 			return
+-- 		end
+--
+-- 		lsp.setup(server)
+-- 	end,
+-- })
 
 -- vim.lsp.handlers['textDocument/hover'] =
 -- 	vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })

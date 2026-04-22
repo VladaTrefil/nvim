@@ -33,3 +33,5 @@ sessions_mngr.setup({
 
 local session_mappings = require('core.mappings').sessions(sessions_mngr)
 utils.load_mappings(session_mappings)
+
+vim.opt.sessionoptions:remove('folds')

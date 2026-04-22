@@ -1,6 +1,7 @@
 local linters = {}
 
-linters.standardjs = require('plugins.config._lint.standardjs')
+-- TODO: fix standardjs linter parser function
+-- linters.standardjs = require('plugins.config._lint.standardjs')
 
 linters.rubocop = require('plugins.config._lint.rubocop')
 

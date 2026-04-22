@@ -66,7 +66,7 @@ M.window = {
 	},
 }
 
-local telescope_utils = require('plugins.config._telescope.utils')
+-- local telescope_utils = require('plugins.config.telescope_config.utils')
 
 M.pickers = {
 	find_files = {
@@ -77,15 +77,15 @@ M.pickers = {
 		--   ['<C-t>'] = select_file_entry,
 		-- }
 	},
-	buffers = {
-		n = {
-			['<enter>'] = telescope_utils.select_buffer,
-			['d'] = actions.delete_buffer,
-		},
-		i = {
-			['<enter>'] = telescope_utils.select_buffer,
-		},
-	},
+	-- buffers = {
+	-- 	n = {
+	-- 		['<enter>'] = telescope_utils.select_buffer,
+	-- 		['d'] = actions.delete_buffer,
+	-- 	},
+	-- 	i = {
+	-- 		['<enter>'] = telescope_utils.select_buffer,
+	-- 	},
+	-- },
 	help_tags = {
 		-- n = {
 		--   ['<C-v>'] = actions.select_vertical,

@@ -62,7 +62,6 @@ M.diagnostic_config = {
 	underline = {
 		severity = { vim.diagnostic.severity.WARN, vim.diagnostic.severity.ERROR },
 	},
-	update_in_insert = false,
 	severity_sort = true,
 	virtual_text = {
 		severity = { vim.diagnostic.severity.WARN, vim.diagnostic.severity.ERROR },
@@ -71,6 +70,7 @@ M.diagnostic_config = {
 	float = {
 		source = 'always', -- Or "if_many"
 	},
+	update_in_insert = true,
 }
 
 M.flags = {}

@@ -15,7 +15,8 @@ local source_icons = {
 	path = icons.Folder,
 	cmdline = icons.Terminal,
 	treesitter = icons.Treesitter,
-	sass_variables = icons.Color,
+	style_variables = icons.Color,
+	style_mixins = icons.Function,
 }
 
 -- Check if a buffer is loaded

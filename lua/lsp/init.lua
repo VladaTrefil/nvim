@@ -4,8 +4,6 @@ local user_config = require('lsp.config')
 local on_attach_func = require('lsp.on_attach')
 local sign_handler = require('lsp.sign_handler')
 
-local lspconfig = require('lspconfig')
-
 local default_capabilities = vim.lsp.protocol.make_client_capabilities()
 local extend = vim.tbl_deep_extend
 
@@ -27,7 +25,7 @@ end
 -- @param  server_name the name of the server
 -- @return the table of lsp_utils options used when setting up the given language server
 lsp.setup_server = function(server_name)
-	local server = lspconfig[server_name]
+	local server = vim.lsp.config[server_name]
 	local user_server_config = user_config.servers_config[server_name] or {}
 
 	local capabilities = extend(
@@ -66,7 +64,7 @@ lsp.setup_server = function(server_name)
 
 	opts = extend('force', user_server_config, opts)
 
-	lspconfig[server_name].setup(opts)
+	vim.lsp.config(server_name, opts)
 end
 
 -- @param client - the LSP client details when attaching

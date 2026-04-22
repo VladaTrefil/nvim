@@ -16,6 +16,8 @@ require('plugins')
 
 require('core.ui.statuscolumn').show()
 
+require('lsp.new')
+
 local base_mappings = require('core.mappings').general
 require('core.utils').load_mappings(base_mappings)
 

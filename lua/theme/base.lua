@@ -4,8 +4,8 @@ local config = {
 	Normal = { fg = colors.light0, bg = colors.dark0 },
 	Visual = { bg = colors.dark3, reverse = true },
 
-	TabLineFill = { fg = colors.light0, bg = colors.dark0, reverse = true },
-	TabLineSel = { fg = colors.bright_aqua, bg = colors.dark0, reverse = true },
+	TabLineFill = { bg = colors.none },
+	TabLineSel = { bg = colors.none },
 
 	Conceal = { fg = colors.bright_blue },
 	Search = { fg = colors.faded_yellow, bg = colors.dark0, reverse = true },
@@ -23,7 +23,7 @@ local config = {
 	Folded = { fg = colors.faded_blue, bg = colors.dark0, italic = true },
 
 	Cursor = { fg = colors.dark0, bg = colors.light0 },
-	CursorLine = { bg = colors.dark1 },
+	CursorLine = { bg = colors.dark2 },
 	CursorLineNr = { fg = colors.bright_orange, bg = colors.dark0, bold = true },
 
 	MatchParen = { fg = colors.dark0, bg = colors.bright_blue, bold = true },

@@ -12,5 +12,3 @@ notify.setup({
 })
 
 vim.notify = notify
-
-require('plugins.config._telescope.utils').load_extension('notify')

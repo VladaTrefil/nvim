@@ -4,19 +4,19 @@ if not present then
 	return
 end
 
-local theme = require('plugins.config._lualine.theme')
+local highlights = require('plugins.config._lualine.theme')
 
 local colors = require('theme.colors')
 local utils = require('core.utils')
 
-utils.set_highlights(theme)
+utils.set_highlights(highlights)
 
 local function file_path()
 	local path = vim.fn.expand('%f')
 	return utils.truncate_path(path, 3, 3, 5)
 end
 
-local bubbles_theme = {
+local theme = {
 	normal = {
 		a = { fg = colors.dark0, bg = colors.bright_blue },
 		b = { fg = colors.light0, bg = colors.dark2 },
@@ -37,7 +37,7 @@ local bubbles_theme = {
 
 lualine.setup({
 	options = {
-		theme = bubbles_theme,
+		theme = theme,
 		component_separators = '|',
 		section_separators = { left = '', right = '' },
 		padding = { left = 1, right = 1 },
@@ -50,7 +50,7 @@ lualine.setup({
 	sections = {
 		lualine_b = {
 			{ file_path, padding = { left = 2, right = 2 } },
-			{ 'branch', padding = { left = 2, right = 2 } },
+			-- { 'branch', padding = { left = 2, right = 2 } },
 		},
 		lualine_c = {},
 		lualine_x = {},

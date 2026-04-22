@@ -185,8 +185,6 @@ M.notify = function(msg, log, opts)
 			animate = false,
 		}
 
-		local async = require('plenary.async')
-
 		opts = merge_tb('force', default_opts, opts or {})
 		log = log or vim.log.levels.INFO
 

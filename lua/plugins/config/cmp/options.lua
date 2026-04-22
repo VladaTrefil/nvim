@@ -56,6 +56,7 @@ local sources = {
 	editor = {
 		{ name = 'ultisnips', priority = 2000 },
 		{ name = 'style_variables', priority = 900 },
+		{ name = 'style_mixins', priority = 900 },
 		{ name = 'nvim_lsp', priority = 800, entry_filter = cmp_utils.filter_lsp },
 		{ name = 'treesitter', priority = 250 },
 		{ name = 'buffer', priority = 250, option = { get_bufnrs = cmp_utils.get_buffers } },
