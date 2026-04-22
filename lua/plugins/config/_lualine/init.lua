@@ -53,7 +53,18 @@ lualine.setup({
 			-- { 'branch', padding = { left = 2, right = 2 } },
 		},
 		lualine_c = {},
-		lualine_x = {},
+		lualine_x = {
+			{
+				function()
+					local ok, rt = pcall(require, 'rails_test')
+					if not ok or not rt.is_running() then
+						return ''
+					end
+					return '󰙨 running'
+				end,
+				color = { fg = '#e5c07b' },
+			},
+		},
 		lualine_y = {
 			{ 'filetype' },
 			{ 'progress' },
