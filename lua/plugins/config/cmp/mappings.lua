@@ -2,21 +2,30 @@ local M = {}
 
 local cmp = require('cmp')
 
-local on_confirm = function(fallback)
-	if cmp.visible() then
+vim.cmd([[inoremap <silent> <Plug>(cmp-literal-tab) <Tab>]])
+vim.cmd([[inoremap <silent> <Plug>(cmp-literal-stab) <S-Tab>]])
+
+local feed = function(plug)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(plug, true, true, true), 'm', true)
+end
+
+local on_confirm = function()
+	if vim.fn['UltiSnips#CanExpandSnippet']() == 1 then
+		feed('<Plug>(cmpu-expand)')
+	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
+		feed('<Plug>(cmpu-jump-forwards)')
+	elseif cmp.visible() then
 		cmp.confirm({ select = true })
-	elseif vim.fn['UltiSnips#CanJumpForwards']() ~= 0 then
-		vim.fn['UltiSnips#JumpForwards']()
 	else
-		fallback()
+		feed('<Plug>(cmp-literal-tab)')
 	end
 end
 
-local on_confirm_inverse = function(fallback)
-	if vim.fn['UltiSnips#CanJumpBackwards']() ~= 0 then
-		vim.fn['UltiSnips#JumpBackwards']()
+local on_confirm_inverse = function()
+	if vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
+		feed('<Plug>(cmpu-jump-backwards)')
 	else
-		fallback()
+		feed('<Plug>(cmp-literal-stab)')
 	end
 end
 

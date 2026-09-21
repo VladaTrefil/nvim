@@ -25,7 +25,6 @@ local sort = {
 	priority_weight = 2,
 	comparators = {
 		cmp.config.compare.exact,
-		cmp.config.compare.scopes,
 		cmp.config.compare.score,
 		cmp_utils.compare_underscore,
 		cmp.config.compare.offset,
