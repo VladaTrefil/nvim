@@ -42,6 +42,10 @@ end
 api.nvim_create_autocmd('FileType', {
 	pattern = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue', 'svelte' },
 	callback = function(args)
+		if vim.fn.executable('vscode-eslint-language-server') ~= 1 then
+			return
+		end
+
 		if utils.filesize_kb() > 50 then
 			return
 		end
@@ -126,6 +130,10 @@ api.nvim_create_autocmd('FileType', {
 api.nvim_create_autocmd('FileType', {
 	pattern = 'ruby',
 	callback = function(args)
+		if vim.fn.executable('rubocop') ~= 1 then
+			return
+		end
+
 		local root_dir = vim.fs.root(args.buf, { '.rubocop.yml', 'Gemfile', '.git' })
 
 		if not root_dir then

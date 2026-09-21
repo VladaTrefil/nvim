@@ -38,20 +38,21 @@ M.exec_lint = function(engine)
 		end
 	end
 
-	-- Filter out linters that don't exist or don't match the condition.
+	-- Skip unavailable executables before nvim-lint tries to spawn them.
 	local ctx = { filename = vim.api.nvim_buf_get_name(0) }
 	ctx.dirname = vim.fn.fnamemodify(ctx.filename, ':h')
 	names = vim.tbl_filter(function(name)
 		local linter = engine.linters[name]
 
-		if not linter then
-			vim.notify('Linter not found: ' .. name, vim.log.levels.WARN, { title = 'nvim-engine' })
+		if type(linter) ~= 'table' then
+			return false
 		end
 
-		local linter_condition = not linter.condition or linter.condition(ctx)
-		local linter_is_table = type(linter) == 'table'
+		local cmd = type(linter.cmd) == 'function' and linter.cmd() or linter.cmd
 
-		return linter and (linter_is_table and linter_condition)
+		return type(cmd) == 'string'
+			and vim.fn.executable(cmd) == 1
+			and (not linter.condition or linter.condition(ctx))
 	end, names)
 
 	-- Run linters.

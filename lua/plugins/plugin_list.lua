@@ -346,29 +346,7 @@ return {
 		end,
 	},
 
-	----
-	-- {
-	-- 	'williamboman/mason.nvim',
-	-- 	build = ':MasonUpdate',
-	-- 	config = function()
-	-- 		require('plugins.config.lsp_tools.mason_conf')
-	-- 	end,
-	-- },
-
 	{ 'folke/lazydev.nvim' },
-
-	-- nvim: /usr/src/debug/neovim/neovim/src/nvim/decoration.c:853: buf_signcols_count_range: Assertion buf->b_signcols.count[prevwidth - 1] >= 0' failed.│ `
-	-- {
-	-- 	'neovim/nvim-lspconfig',
-	-- 	dependencies = {
-	-- 		'williamboman/mason.nvim',
-	-- 		'williamboman/mason-lspconfig.nvim',
-	-- 	},
-	-- 	config = function()
-	-- 		-- require('plugins.config.lsp_tools.neodev')
-	-- 		-- require('plugins.config.lsp_tools.nvim_lspconfig')
-	-- 	end,
-	-- },
 
 	{ 'folke/trouble.nvim' },
 

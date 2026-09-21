@@ -8,6 +8,10 @@ local severity_map = {
 }
 
 local function server_argument()
+	if vim.fn.executable('bundle') ~= 1 then
+		return
+	end
+
 	local output = vim.fn.system('bundle exec rubocop --server --version')
 
 	if not output:match('--server') then

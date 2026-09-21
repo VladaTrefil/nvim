@@ -65,6 +65,7 @@ local format_on_save = function(bufnr)
 end
 
 conform.setup({
+	notify_no_formatters = false,
 	formatters_by_ft = {
 		lua = { 'stylua' },
 		ruby = { 'rubocop' },

@@ -9,9 +9,6 @@ end
 
 local plugins = require('plugins.plugin_list')
 
--- add binaries installed by mason.nvim to path
-vim.env.PATH = vim.env.PATH .. ':' .. vim.fn.stdpath('data') .. '/mason/bin'
-
 lazy.setup({
 	spec = plugins,
 	-- automatically check for plugin updates

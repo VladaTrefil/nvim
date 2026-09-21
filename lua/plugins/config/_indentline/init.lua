@@ -36,7 +36,6 @@ indentline.setup({
 			'lspinfo',
 			'TelescopePrompt',
 			'TelescopeResults',
-			'mason',
 			'dashboard',
 		},
 		buftypes = { 'terminal' },
