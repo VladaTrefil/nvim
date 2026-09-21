@@ -19,9 +19,9 @@ local formatters = {
 			return require('plugins.config.stylelint').args(ctx.filename)
 		end,
 	},
-	beautysh = {
-		prepend_args = {
-			'--indent-size=2',
+	shfmt = {
+		append_args = {
+			'-i', '2',
 		},
 	},
 	rubocop = rubocop,
@@ -71,7 +71,7 @@ conform.setup({
 		scss = { 'prettier' },
 		javascript = { 'standardjs' },
 		json = { 'prettier' },
-		sh = { 'beautysh' },
+		sh = { 'shfmt' },
 		yaml = { 'prettier' },
 		c = { 'clang-format' },
 		['_'] = { 'trim_whitespace' },

@@ -10,7 +10,7 @@ can run without it, but the named feature needs it. Missing LSP and lint executa
 missing formatters do not generate availability notifications. This does not conceal failures
 from installed but misconfigured tools or missing project libraries.
 
-Fedora sources below are candidates, **unverified on the target Fedora machine**; Block 2 must
+Unless explicitly marked verified, Fedora sources below are candidates, **unverified on the target Fedora machine**; Block 2 must
 confirm package names, repository availability and versions. npm/gem entries identify upstream
 distribution channels for provisioning outside Neovim, not install hooks or a claim that Fedora
 has no native package. Nothing here is an instruction to install packages from the editor.
@@ -22,7 +22,7 @@ its `packages/editor-tools.txt`; asdf owns Node 24.21.0 / Ruby 3.4.10 and their
 `default-npm-packages` / `default-gems`. This includes npm jsonlint (not Fedora's
 incompatible demjson executable), Standard and vscode-langservers-extracted.
 StyLua 2.5.2, Selene 0.31.0 and lf r42 use pinned, SHA-256-verified upstream release
-binaries. Beautysh remains unavailable pending a separately approved source;
+binaries. Shell formatting uses Fedora's `shfmt` with two-space indentation (`-i 2`);
 inactive LuaLS and the other dormant tools below are not mandatory packages.
 
 The global RuboCop path is now `$XDG_CONFIG_HOME/rubocop/config.yml`, shared with
@@ -88,7 +88,7 @@ These paths are discovered, never installed, by Neovim.
 | `isort` | `lua/plugins/config/_conform/init.lua:72` | Optional Python import formatting | dnf `python3-isort` candidate unverified |
 | `black` | `lua/plugins/config/_conform/init.lua:72` | Optional Python formatting | dnf `python3-black` candidate unverified |
 | `prettier` | `lua/plugins/config/_conform/init.lua:74`, `:76`, `:78` | Optional SCSS, JSON and YAML formatting | npm global `prettier` |
-| `beautysh` | `lua/plugins/config/_conform/init.lua:77` | Optional shell formatting | dnf source/package name **unverified**; resolve in Block 2 |
+| `shfmt` | `lua/plugins/config/_conform/init.lua:74`; indent options at `:22` | Optional shell formatting, two-space indent (`-i 2`) | dnf `shfmt` 3.7.0-5.fc41 ([Fedora 44 source](https://packages.fedoraproject.org/pkgs/golang-mvdan-sh-3/shfmt/fedora-44.html)); `/usr/bin/shfmt` ownership and Conform invocation verified on Fedora 44 |
 | `clang-format` | `lua/plugins/config/_conform/init.lua:79` | Optional C formatting | dnf `clang-tools-extra` candidate unverified |
 
 The [upstream server package](https://github.com/hrsh7th/vscode-langservers-extracted#usage)
