@@ -1,15 +1,13 @@
 local util = require('lspconfig.util')
+local config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h') .. '/rubocop/rubocop.yml'
+local cmd = { 'bundle', 'exec', 'rubocop', '--lsp' }
+
+if vim.fn.filereadable(config) == 1 then
+	vim.list_extend(cmd, { '--config', config })
+end
 
 return {
-	cmd = {
-		'bundle',
-		'exec',
-		'rubocop',
-		'--lsp',
-		'--config',
-		vim.fn.expand('$XDG_CONFIG_HOME/rubocop/rubocop.yml'),
-	},
-	bundle_path = '~/.local/share/asdf/shims/bundle',
+	cmd = cmd,
 	init_options = {
 		enableProfileLoading = false,
 	},

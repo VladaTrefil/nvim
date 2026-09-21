@@ -1,4 +1,5 @@
 local linters = {}
+local config_home = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h')
 
 -- TODO: fix standardjs linter parser function
 -- linters.standardjs = require('plugins.config._lint.standardjs')
@@ -17,8 +18,6 @@ linters.shellcheck = {
 
 linters.stylelint = {
 	args = {
-		'--config',
-		vim.fn.expand('$XDG_CONFIG_HOME/stylelint/stylelintrc.json'),
 		'-f',
 		'json',
 		'--stdin',
@@ -29,14 +28,13 @@ linters.stylelint = {
 	},
 }
 
+local stylelint_config = config_home .. '/stylelint/stylelintrc.json'
+if vim.fn.filereadable(stylelint_config) == 1 then
+	vim.list_extend(linters.stylelint.args, { '--config', stylelint_config })
+end
+
 linters.codespell = {
 	args = {
-		'--ignore-words',
-		vim.fn.expand('$XDG_CONFIG_HOME/codespell/ignore.txt'),
-		'--exclude-file',
-		vim.fn.expand('$XDG_CONFIG_HOME/codespell/exclude-file.txt'),
-		'--config',
-		vim.fn.expand('$XDG_CONFIG_HOME/codespell/codespellrc'),
 		'--regex',
 		"(?<![a-z])[a-z'`]+|[A-Z][a-z'`]*|[a-z]+'[a-z]*|[a-z]+(?=[_-])|[a-z]+(?=[A-Z])|\\d+",
 		function()
@@ -44,6 +42,17 @@ linters.codespell = {
 		end,
 	},
 }
+
+for _, option in ipairs({
+	{ '--ignore-words', 'ignore.txt' },
+	{ '--exclude-file', 'exclude-file.txt' },
+	{ '--config', 'codespellrc' },
+}) do
+	local path = config_home .. '/codespell/' .. option[2]
+	if vim.fn.filereadable(path) == 1 then
+		vim.list_extend(linters.codespell.args, { option[1], path })
+	end
+end
 
 local function get_python_lint_cmd(linter_name)
 	local local_cmd = vim.fn.fnamemodify('./.venv/bin/' .. linter_name, ':p')
