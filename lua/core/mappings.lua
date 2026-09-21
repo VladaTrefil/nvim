@@ -99,9 +99,7 @@ M.general = {
 				local line = vim.fn.line('.')
 				local result = path .. ':' .. line
 
-				vim.fn.system(
-					'echo -n ' .. vim.fn.shellescape(result) .. ' | xclip -selection clipboard'
-				)
+				vim.fn.setreg('+', result)
 			end,
 			'Copy current file relative path to clipboard',
 		},

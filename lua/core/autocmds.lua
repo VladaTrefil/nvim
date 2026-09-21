@@ -32,9 +32,9 @@ autocmd({ 'FocusGained', 'BufEnter', 'BufWritePost' }, {
 })
 
 autocmd('BufWritePost', {
-	pattern = vim.fn.expand('$HOME/config/nvim/*'),
+	pattern = vim.fn.stdpath('config') .. '/*',
 	callback = function()
-		vim.fn.source(vim.env.MYVIMRC)
+		vim.cmd.source(vim.env.MYVIMRC)
 	end,
 })
 

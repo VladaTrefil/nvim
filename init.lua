@@ -10,7 +10,7 @@ require('core.options')
 
 require('core.global_cmds')
 
-vim.cmd('source $XDG_CONFIG_HOME/nvim/legacy/script.vim')
+vim.cmd.source(vim.fn.stdpath('config') .. '/legacy/script.vim')
 
 require('plugins')
 

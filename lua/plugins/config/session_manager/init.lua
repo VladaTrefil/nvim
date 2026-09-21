@@ -20,7 +20,7 @@ sessions_mngr.setup({
 	autosave_last_session = true,
 	autosave_ignore_not_normal = true,
 	autosave_ignore_dirs = {
-		vim.env.XDG_STATE_HOME,
+		vim.fn.stdpath('state'),
 	},
 	autosave_ignore_filetypes = {
 		'gitcommit',
