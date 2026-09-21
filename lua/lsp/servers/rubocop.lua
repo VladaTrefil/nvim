@@ -1,5 +1,5 @@
 local util = require('lspconfig.util')
-local config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h') .. '/rubocop/rubocop.yml'
+local config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h') .. '/rubocop/config.yml'
 local cmd = { 'bundle', 'exec', 'rubocop', '--lsp' }
 
 if vim.fn.filereadable(config) == 1 then

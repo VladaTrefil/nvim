@@ -12,7 +12,16 @@ M.setup_linters = function(linters)
 		linter.ignore_exitcode = data.ignore_exitcode or linter.ignore_exitcode
 		linter.parser = data.parser or linter.parser
 
-		lint.linters[name] = linter
+		if type(data.args) == 'function' then
+			lint.linters[name] = function()
+				local resolved = vim.deepcopy(linter)
+				local cmd = type(resolved.cmd) == 'function' and resolved.cmd() or resolved.cmd
+				resolved.args = vim.fn.executable(cmd) == 1 and data.args() or {}
+				return resolved
+			end
+		else
+			lint.linters[name] = linter
+		end
 	end
 end
 
@@ -43,6 +52,9 @@ M.exec_lint = function(engine)
 	ctx.dirname = vim.fn.fnamemodify(ctx.filename, ':h')
 	names = vim.tbl_filter(function(name)
 		local linter = engine.linters[name]
+		if type(linter) == 'function' then
+			linter = linter()
+		end
 
 		if type(linter) ~= 'table' then
 			return false

@@ -14,7 +14,7 @@ local function config_path()
 		return vim.fn.getcwd() .. '/.rubocop.yml'
 	end
 
-	local config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h') .. '/rubocop/rubocop.yml'
+	local config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h') .. '/rubocop/config.yml'
 	if vim.fn.filereadable(config) == 1 then
 		return config
 	end

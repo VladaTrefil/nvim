@@ -17,21 +17,14 @@ linters.shellcheck = {
 }
 
 linters.stylelint = {
-	args = {
-		'-f',
-		'json',
-		'--stdin',
-		'--stdin-filename',
-		function()
-			return vim.fn.expand('%:p')
-		end,
-	},
+	args = function()
+		local filename = vim.fn.expand('%:p')
+		return vim.list_extend(
+			{ '-f', 'json', '--stdin', '--stdin-filename', filename },
+			require('plugins.config.stylelint').args(filename)
+		)
+	end,
 }
-
-local stylelint_config = config_home .. '/stylelint/stylelintrc.json'
-if vim.fn.filereadable(stylelint_config) == 1 then
-	vim.list_extend(linters.stylelint.args, { '--config', stylelint_config })
-end
 
 linters.codespell = {
 	args = {
@@ -43,15 +36,9 @@ linters.codespell = {
 	},
 }
 
-for _, option in ipairs({
-	{ '--ignore-words', 'ignore.txt' },
-	{ '--exclude-file', 'exclude-file.txt' },
-	{ '--config', 'codespellrc' },
-}) do
-	local path = config_home .. '/codespell/' .. option[2]
-	if vim.fn.filereadable(path) == 1 then
-		vim.list_extend(linters.codespell.args, { option[1], path })
-	end
+local codespell_config = config_home .. '/codespell/codespellrc'
+if vim.fn.filereadable(codespell_config) == 1 then
+	vim.list_extend(linters.codespell.args, { '--config', codespell_config })
 end
 
 local function get_python_lint_cmd(linter_name)

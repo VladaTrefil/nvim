@@ -13,14 +13,11 @@ local utils = require('core.utils')
 
 local rubocop = require('plugins.config._conform.rubocop')
 local stylua = require('plugins.config._conform.stylua')
-local stylelint_config = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h')
-	.. '/stylelint/stylelintrc.json'
-
 local formatters = {
 	stylelint = {
-		prepend_args = vim.fn.filereadable(stylelint_config) == 1
-			and { '--config', stylelint_config }
-			or {},
+		prepend_args = function(_, ctx)
+			return require('plugins.config.stylelint').args(ctx.filename)
+		end,
 	},
 	beautysh = {
 		prepend_args = {

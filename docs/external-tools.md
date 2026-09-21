@@ -15,6 +15,24 @@ confirm package names, repository availability and versions. npm/gem entries ide
 distribution channels for provisioning outside Neovim, not install hooks or a claim that Fedora
 has no native package. Nothing here is an instruction to install packages from the editor.
 
+## Block 2 provisioning and shared configuration
+
+The dotfiles installer owns the active tool inventory. Fedora RPMs are listed in
+its `packages/editor-tools.txt`; asdf owns Node 24.21.0 / Ruby 3.4.10 and their
+`default-npm-packages` / `default-gems`. This includes npm jsonlint (not Fedora's
+incompatible demjson executable), Standard and vscode-langservers-extracted.
+StyLua 2.5.2, Selene 0.31.0 and lf r42 use pinned, SHA-256-verified upstream release
+binaries. Beautysh remains unavailable pending a separately approved source;
+inactive LuaLS and the other dormant tools below are not mandatory packages.
+
+The global RuboCop path is now `$XDG_CONFIG_HOME/rubocop/config.yml`, shared with
+RuboCop's own discovery. Project bundles and project configs retain their role.
+Stylelint's global fallback passes `--config-basedir` from `npm root -g` at each
+invocation; project configuration keeps Stylelint's native discovery. Lint and
+Conform use `plugins.config.stylelint` for the same behavior. Codespell's installed
+rc owns its ignore/exclusion inputs, so this editor passes only `--config`.
+`tests/tooling.lua` checks these consumer contracts before the parser suite.
+
 ## Editor, installation and supporting commands
 
 | Binary | Consumer (repository file:line) | Requirement | Likely Fedora source |
