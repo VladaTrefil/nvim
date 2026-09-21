@@ -14,6 +14,13 @@ directories, symlinks this repository as `config/nvim`, and clears inherited env
 except `PATH`. It removes the temporary environment on exit. Plugins install at their locked
 revisions on the first run; allow several minutes and network access. Lazy writes a temporary
 copy of the lockfile. `selene lua` runs when Selene is on `PATH`, otherwise the runner reports a skip.
+The exit status reflects the specs; lint findings are reported but are non-fatal. The existing
+9 Selene errors and 33 warnings are deliberately deferred, including duplicate JavaScript highlight
+keys and `if_same_then_else` in the Rails test module.
+
+Language servers, linters and formatters must be supplied externally; Neovim only bootstraps its
+plugin manager and plugins (including Treesitter parsers). See [the external tool manifest](docs/external-tools.md)
+for the active dependencies and test prerequisites.
 
 Reuse the same isolation for other checks (the bootstrap protects the repository lockfile):
 
