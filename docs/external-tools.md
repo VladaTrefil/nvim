@@ -21,9 +21,11 @@ The dotfiles installer owns the active tool inventory. Fedora RPMs are listed in
 its `packages/editor-tools.txt`; asdf owns Node 24.21.0 / Ruby 3.4.10 and their
 `default-npm-packages` / `default-gems`. This includes npm jsonlint (not Fedora's
 incompatible demjson executable), Standard and vscode-langservers-extracted.
-StyLua 2.5.2, Selene 0.31.0 and lf r42 use pinned, SHA-256-verified upstream release
-binaries. Shell formatting uses Fedora's `shfmt` with two-space indentation (`-i 2`);
-inactive LuaLS and the other dormant tools below are not mandatory packages.
+StyLua 2.5.2, Selene 0.31.0, lf r42 and LazyGit 0.65.1 use pinned,
+SHA-256-verified upstream release binaries. ImageMagick is a Fedora package and supplies
+`magick`/`convert` for Snacks image previews. Shell formatting uses Fedora's `shfmt` with
+two-space indentation (`-i 2`); inactive LuaLS and the other dormant tools below are not
+mandatory packages.
 
 The global RuboCop path is now `$XDG_CONFIG_HOME/rubocop/config.yml`, shared with
 RuboCop's own discovery. Project bundles and project configs retain their role.
@@ -39,6 +41,7 @@ rc owns its ignore/exclusion inputs, so this editor passes only `--config`.
 |---|---|---|---|
 | `nvim` | `tests/run.sh:10`; `init.lua:21` | Required; locked Treesitter documents Neovim 0.12+ | dnf `neovim`; available version unverified |
 | `git` | `lua/plugins/bootstrap.lua:8`; `tests/bootstrap.lua:6`; Git plugins in `lua/plugins/plugin_list.lua:393` | Required for plugin bootstrap; also Git features | dnf `git` |
+| `lazygit` | `lua/plugins/config/git/init.lua:5-9` | Optional; required for the configured LazyGit integration | Checksum-pinned upstream release; absent from Fedora 44 repositories |
 | `curl` | Parser install at `lua/plugins/config/treesitter.lua:32`; HTTP adapter at `lua/plugins/config/codecompanion.lua:34` | Required for fresh parsers; optional for AI requests | dnf `curl` |
 | `tar`, `gzip` | Parser install at `lua/plugins/config/treesitter.lua:32` (plugin extracts `.tar.gz` with `tar -xzf`) | Required for fresh parsers | dnf `tar`, `gzip` |
 | `tree-sitter` | Parser install at `lua/plugins/config/treesitter.lua:32`; build at `lua/plugins/plugin_list.lua:8` | Required to build parsers; locked plugin documents CLI 0.26.1+ | dnf `tree-sitter-cli` candidate; name/version unverified; not npm |
@@ -58,6 +61,7 @@ rc owns its ignore/exclusion inputs, so this editor passes only `--config`.
 | `man` | `lua/plugins/plugin_list.lua:153` | Optional manual-page picker | dnf `man-db` |
 | `xdg-open` or `gio` | `lua/lsp/new.lua:109` (`vim.ui.open`) | Optional desktop URL opener | dnf `xdg-utils` or `glib2` candidate |
 | `wl-copy`, `wl-paste` **or** `xclip`/`xsel` | `lua/core/options.lua:45` (`unnamedplus`) | Optional system-clipboard provider, depending on desktop/session | dnf `wl-clipboard`, `xclip` or `xsel` |
+| `magick` or `convert` | Snacks plugin at `lua/plugins/plugin_list.lua:57` | Optional runtime; required for Snacks image conversion and non-PNG image previews | dnf `ImageMagick` |
 
 The [locked Treesitter README](https://github.com/nvim-treesitter/nvim-treesitter/blob/4916d6592ede8c07973490d9322f187e07dfefac/README.md#requirements)
 specifies the parser-build prerequisites. The build callback enables the plugin runtime path,
