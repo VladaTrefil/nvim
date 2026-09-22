@@ -18,6 +18,16 @@ The exit status reflects the specs; lint findings are reported but are non-fatal
 9 Selene errors and 33 warnings are deliberately deferred, including duplicate JavaScript highlight
 keys and `if_same_then_else` in the Rails test module.
 
+Check the theme on a real first install and a second start in the same isolated environment:
+
+```sh
+./tests/theme-startup.sh
+```
+
+This installs all locked plugins from scratch, checks startup errors and the configured palette,
+and verifies that repeated theme application preserves plugin highlights. It also exercises
+`ColorScheme` and `User LazyDone` recovery. Network access and GNU `timeout` are required.
+
 Language servers, linters and formatters must be supplied externally; Neovim only bootstraps its
 plugin manager and plugins (including Treesitter parsers). See [the external tool manifest](docs/external-tools.md)
 for the active dependencies and test prerequisites.

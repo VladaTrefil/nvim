@@ -1,3 +1,6 @@
+local M = {}
+
+-- Clear defaults only on initial loading, before plugins define their highlights.
 vim.cmd('highlight clear')
 
 if vim.fn.exists('syntax_on') then
@@ -5,9 +8,6 @@ if vim.fn.exists('syntax_on') then
 end
 
 local utils = require('core.utils')
-
-vim.o.background = 'dark'
-vim.o.termguicolors = true
 
 local highlight_groups = {
 	base = { 'base', 'highlight_groups' },
@@ -27,14 +27,48 @@ local highlight_groups = {
 	},
 }
 
-local highlights = {}
+local applying = false
 
-for _, module in ipairs(highlight_groups.base) do
-	highlights = require('theme.' .. module)
-	utils.set_highlights(highlights)
+function M.apply()
+	-- Changing 'background' can reload a colorscheme and re-enter this function.
+	if applying then
+		return
+	end
+	applying = true
+
+	-- Avoid OptionSet callbacks in plugins when these values already match.
+	if vim.o.background ~= 'dark' then
+		vim.o.background = 'dark'
+	end
+	if not vim.o.termguicolors then
+		vim.o.termguicolors = true
+	end
+
+	-- Reapply our definitions without clearing highlights owned by plugins.
+	for _, module in ipairs(highlight_groups.base) do
+		utils.set_highlights(require('theme.' .. module))
+	end
+
+	for _, module in ipairs(highlight_groups.syntax) do
+		utils.set_highlights(require('theme.syntax.' .. module))
+	end
+
+	applying = false
 end
 
-for _, module in ipairs(highlight_groups.syntax) do
-	highlights = require('theme.syntax.' .. module)
-	utils.set_highlights(highlights)
-end
+local group = vim.api.nvim_create_augroup('NvimTheme', { clear = true })
+vim.api.nvim_create_autocmd('ColorScheme', {
+	group = group,
+	-- Lazy's install colorscheme runs before plugin config needs groups like Bg2.
+	callback = M.apply,
+})
+vim.api.nvim_create_autocmd('User', {
+	group = group,
+	pattern = 'LazyDone',
+	-- Restore the theme after startup too, without erasing plugin highlights.
+	callback = M.apply,
+})
+
+M.apply()
+
+return M
