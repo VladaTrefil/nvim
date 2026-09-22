@@ -44,6 +44,8 @@ local function check()
 	for _, name in ipairs(groups) do
 		report('HIGHLIGHT ' .. name .. ' ' .. vim.json.encode(actual[name]))
 	end
+	local colors_name = vim.g.colors_name or '<unset>'
+	report('COLORS_NAME ' .. colors_name)
 	report('LAZY_ERRORS ' .. #errors)
 	for _, message in ipairs(errors) do
 		report(message)
@@ -64,6 +66,7 @@ local function check()
 		'Unexpected install state'
 	)
 	assert(package.loaded['plugins.config._indentline'], 'Indentline config did not complete')
+	assert(colors_name ~= 'habamax', 'Lazy applied habamax during installation')
 
 	local colors = require('theme.colors')
 	local function rgb(value)

@@ -6,9 +6,11 @@ repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 # shellcheck disable=SC2016
 "$repo_root/tests/with-isolated-xdg.sh" bash -c '
   set -euo pipefail
+  rm -rf -- "$XDG_DATA_HOME/nvim" "$XDG_STATE_HOME/nvim" "$XDG_CACHE_HOME/nvim"
   test ! -e "$XDG_DATA_HOME/nvim"
   test ! -e "$XDG_STATE_HOME/nvim"
-  printf "%s\n" "PRISTINE: no Neovim data, state, or installed plugins"
+  test ! -e "$XDG_CACHE_HOME/nvim"
+  printf "%s\n" "PRISTINE: no Neovim data, state, cache, or installed plugins"
   status=0
   for phase in first second; do
     phase_status=0
