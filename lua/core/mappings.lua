@@ -40,7 +40,9 @@ M.general = {
 		['<BS>'] = { '<C-o>', 'Backspace goes back' },
 
 		['<Leader>E'] = {
-			'<cmd> :execute "!dolphin " . shellescape(getcwd(),1) <CR>',
+			function()
+				vim.system({ 'pcmanfm-qt', vim.fn.getcwd() }, { detach = true })
+			end,
 			'Open current directory in explorer',
 			opts = { silent = true },
 		},
