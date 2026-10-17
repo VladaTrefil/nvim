@@ -68,6 +68,33 @@ local function check()
 	assert(package.loaded['plugins.config._indentline'], 'Indentline config did not complete')
 	assert(colors_name ~= 'habamax', 'Lazy applied habamax during installation')
 
+	local dashboard = require('alpha.themes.dashboard')
+	local dashboard_actions = {}
+	for _, button in ipairs(dashboard.section.buttons.val) do
+		dashboard_actions[button.opts.shortcut] = button.opts.keymap[3]
+	end
+	assert(
+		dashboard_actions.f == '<cmd>lua Snacks.picker.files({ hidden = true })<CR>',
+		'Alpha file picker does not use Snacks'
+	)
+	assert(
+		dashboard_actions.r == '<cmd>lua Snacks.picker.recent()<CR>',
+		'Alpha recent picker does not use Snacks'
+	)
+
+	local autopairs_filetypes = require('nvim-autopairs').config.disable_filetype
+	assert(
+		vim.tbl_contains(autopairs_filetypes, 'snacks_picker_input'),
+		'Autopairs is active in the Snacks picker input'
+	)
+	local indentline_filetypes = require('ibl.config').get_config(0).exclude.filetypes
+	assert(
+		vim.tbl_contains(indentline_filetypes, 'snacks_picker_input')
+			and vim.tbl_contains(indentline_filetypes, 'snacks_picker_list'),
+		'Indent guides are active in Snacks picker windows'
+	)
+	report('PASS: Alpha and picker exclusions use Snacks')
+
 	local colors = require('theme.colors')
 	local function rgb(value)
 		return tonumber(value:sub(2), 16)

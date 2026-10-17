@@ -7,7 +7,7 @@ end
 autopairs.setup({
 	check_ts = true,
 	fast_wrap = {},
-	disable_filetype = { 'TelescopePrompt', 'vim' },
+	disable_filetype = { 'snacks_picker_input', 'vim' },
 	ts_config = {
 		lua = { 'string' },
 		javascript = { 'string', 'template_string' },

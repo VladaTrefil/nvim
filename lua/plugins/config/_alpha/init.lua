@@ -20,7 +20,7 @@ local button_config = {
 		key = 'f',
 		icon = icons.Search,
 		name = 'Search directory',
-		cmd = ':Telescope find_files<CR>',
+		cmd = '<cmd>lua Snacks.picker.files({ hidden = true })<CR>',
 	},
 	{
 		key = 'e',
@@ -32,7 +32,7 @@ local button_config = {
 		key = 'r',
 		icon = icons.Files,
 		name = 'Recent',
-		cmd = ':Telescope oldfiles<CR>',
+		cmd = '<cmd>lua Snacks.picker.recent()<CR>',
 	},
 	{
 		key = 's',

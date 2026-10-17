@@ -1,9 +1,6 @@
 local linters = {}
 local config_home = vim.fn.fnamemodify(vim.fn.stdpath('config'), ':h')
 
--- TODO: fix standardjs linter parser function
--- linters.standardjs = require('plugins.config._lint.standardjs')
-
 linters.rubocop = require('plugins.config._lint.rubocop')
 
 linters.slimlint = require('plugins.config._lint.slimlint')
