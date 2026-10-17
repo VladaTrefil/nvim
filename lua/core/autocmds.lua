@@ -33,13 +33,6 @@ autocmd({ 'FocusGained', 'BufEnter' }, {
 	end,
 })
 
-autocmd('BufWritePost', {
-	pattern = vim.fn.stdpath('config') .. '/*',
-	callback = function()
-		vim.cmd.source(vim.env.MYVIMRC)
-	end,
-})
-
 autocmd({ 'BufWritePre', 'FileWritePre' }, {
 	desc = 'Auto mkdir for missing directory',
 	pattern = '*',

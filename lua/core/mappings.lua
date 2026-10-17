@@ -150,17 +150,6 @@ M.ultisnips = {
 	},
 }
 
-M.codespell = {
-	n = {
-		['<Leader>Ci'] = {
-			function()
-				utils.add_codespell_ignore_misspell()
-			end,
-			'Add misspelling on current line to codespell ignore list',
-		},
-	},
-}
-
 M.sessions = function(mngr)
 	return {}
 end

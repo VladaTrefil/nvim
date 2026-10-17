@@ -197,3 +197,28 @@ check(
 
 assert(#failures == 0, table.concat(failures, '\n'))
 print('PASS: buffer refresh and native paste preserve Neovim semantics')
+
+local gitsigns_plugin
+for _, plugin in ipairs(dofile('lua/plugins/plugin_list.lua')) do
+	if type(plugin) == 'table' and plugin[1] == 'lewis6991/gitsigns.nvim' then
+		gitsigns_plugin = plugin
+		break
+	end
+end
+check(
+	gitsigns_plugin and vim.deep_equal(gitsigns_plugin.event, { 'BufReadPre', 'BufNewFile' }),
+	'Gitsigns must use lazy.nvim buffer events'
+)
+
+local reload_probe = scratch .. '/reload-probe.lua'
+vim.fn.writefile({ 'vim.g.core_reload_probe = vim.g.core_reload_probe + 1' }, reload_probe)
+vim.env.MYVIMRC = reload_probe
+vim.g.core_reload_probe = 0
+local config_buf = vim.api.nvim_create_buf(true, false)
+vim.api.nvim_buf_set_name(config_buf, vim.fn.stdpath('config') .. '/synthetic.lua')
+vim.api.nvim_exec_autocmds('BufWritePost', { buffer = config_buf })
+check(vim.g.core_reload_probe == 0, 'writing config files must not source MYVIMRC')
+check(vim.fn.exists(':restart') == 2, 'native :restart must be available as the reload path')
+
+assert(#failures == 0, table.concat(failures, '\n'))
+print('PASS: lazy.nvim events and native restart replace obsolete loaders')

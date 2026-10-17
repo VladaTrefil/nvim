@@ -106,10 +106,6 @@ M.fold_label_text = function()
 	return ' ' .. text .. spacer .. ' (' .. fold_size .. ' L)  '
 end
 
-M.is_available = function(plugin)
-	return packer_plugins ~= nil and packer_plugins[plugin] ~= nil
-end
-
 M.trigger_event = function(event)
 	vim.schedule(function()
 		vim.api.nvim_exec_autocmds('User', { pattern = 'Custom' .. event })
@@ -172,20 +168,6 @@ M.mkdir = function()
 	-- Create that directory (and its parents) if it doesn't exist yet
 	if fn.isdirectory(dir) == 0 then
 		fn.mkdir(dir, 'p')
-	end
-end
-
-M.add_codespell_ignore_misspell = function()
-	if not vim.fn.executable('codespell') then
-		return
-	end
-
-	local file_path = vim.fn.expand('%:p')
-	local output = vim.fn.execute('!codespell ' .. file_path)
-
-	if output then
-		-- print(vim.fn.match(output, '(^/.*:\\d:\\s*)\\@<=\\w*'))
-		print(vim.fn.matchstr(output, '(/.*:\\d*:\\s*)\\@<=\\w*'))
 	end
 end
 

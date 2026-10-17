@@ -327,6 +327,7 @@ return {
 
 	{
 		'lewis6991/gitsigns.nvim',
+		event = { 'BufReadPre', 'BufNewFile' },
 		config = function()
 			require('plugins.config._gitsigns')
 		end,
