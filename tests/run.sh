@@ -6,6 +6,7 @@ repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 # shellcheck disable=SC2016
 "$repo_root/tests/with-isolated-xdg.sh" bash -c '
   set -euo pipefail
+  nvim --headless -u NONE -i NONE -l tests/core.lua
   nvim --headless -u NONE -i NONE -l tests/plugin-config.lua
   nvim --headless -u NONE -l tests/tooling.lua
   spec_status=0

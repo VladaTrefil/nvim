@@ -21,7 +21,8 @@ local formatters = {
 	},
 	shfmt = {
 		append_args = {
-			'-i', '2',
+			'-i',
+			'2',
 		},
 	},
 	rubocop = rubocop,
@@ -56,6 +57,10 @@ local format_on_save = function(bufnr)
 		or utils.filesize_kb() > 128
 	then
 		return false
+	end
+
+	if vim.bo[bufnr].filetype == 'svg' then
+		utils.autoindent(bufnr)
 	end
 
 	return autoformat_opts

@@ -4,35 +4,6 @@ local statuscolumn = require('core.ui.statuscolumn')
 
 local fn = vim.fn
 local merge_tb = vim.tbl_deep_extend
-local register_name = vim.v.register
-
--- Counts number of lines in copy register
-M.line_count_in_register = function()
-	local register = fn.getreg(vim.v.register, nil, true)
-
-	if type(register) == 'table' then
-		return vim.tbl_count(register)
-	else
-		return 1
-	end
-end
-
--- true/false if line under the cursor is blank
-M.is_line_blank = function()
-	local line = fn.getline('.')
-	return fn.match(line, '^\\s*$') == 0
-end
-
-M.register_ends_in_NL = function()
-	local register = fn.getreg(vim.v.register)
-	return fn.match(register, '\n$') > -1
-end
-
--- true/false if copy register contains block of text
-M.register_contains_block = function()
-	local register_type = fn.getregtype(register_name)
-	return register_type == 'V' and M.register_ends_in_NL()
-end
 
 -- makes string safe for nvim commands
 M.termcodes = function(str)
@@ -135,42 +106,6 @@ M.fold_label_text = function()
 	return ' ' .. text .. spacer .. ' (' .. fold_size .. ' L)  '
 end
 
-M.paste_as_insert = function(reverse)
-	local base = '<c-r><c-p>+<esc>'
-	local before_cmd = ''
-	local after_cmd = ''
-
-	-- Register has linewise text
-	if M.register_contains_block() then
-		if reverse then
-			before_cmd = 'O'
-		else
-			before_cmd = 'o'
-		end
-
-		local line_count = M.line_count_in_register()
-		after_cmd = '"xdd' .. line_count .. 'k'
-	-- Register has blockwise or charwise text
-	else
-		if M.is_line_blank() then
-			before_cmd = '"xS'
-		else
-			if reverse then
-				before_cmd = 'i'
-			else
-				before_cmd = 'a'
-			end
-		end
-	end
-
-	local keys = M.termcodes(before_cmd .. base .. after_cmd)
-	vim.api.nvim_feedkeys(keys, 'n', false)
-end
-
-M.is_available = function(plugin)
-	return packer_plugins ~= nil and packer_plugins[plugin] ~= nil
-end
-
 M.trigger_event = function(event)
 	vim.schedule(function()
 		vim.api.nvim_exec_autocmds('User', { pattern = 'Custom' .. event })
@@ -196,14 +131,34 @@ M.notify = function(msg, log, opts)
 	end
 end
 
--- Expands xml tags to next lines
-M.expand_xml_tags = function()
-	vim.cmd([[%s/></>\r</ge]])
+local function with_saved_view(bufnr, callback)
+	if bufnr == nil or bufnr == 0 then
+		bufnr = vim.api.nvim_get_current_buf()
+	end
+	local is_current_buffer = bufnr == vim.api.nvim_get_current_buf()
+	local view = is_current_buffer and vim.fn.winsaveview() or nil
+
+	vim.api.nvim_buf_call(bufnr, callback)
+
+	if view then
+		vim.fn.winrestview(view)
+	end
 end
 
--- Auto indents entire file
-M.autoindent = function()
-	vim.fn.feedkeys("gg=G''")
+local function indent_buffer()
+	vim.cmd.normal({ args = { 'gg=G' }, bang = true })
+end
+
+-- Auto indents an entire buffer synchronously.
+M.autoindent = function(bufnr)
+	with_saved_view(bufnr, indent_buffer)
+end
+
+M.format_xml = function(bufnr)
+	with_saved_view(bufnr, function()
+		vim.cmd([[%s/></>\r</ge]])
+		indent_buffer()
+	end)
 end
 
 -- Creates a directory if it doesn't exist
@@ -213,20 +168,6 @@ M.mkdir = function()
 	-- Create that directory (and its parents) if it doesn't exist yet
 	if fn.isdirectory(dir) == 0 then
 		fn.mkdir(dir, 'p')
-	end
-end
-
-M.add_codespell_ignore_misspell = function()
-	if not vim.fn.executable('codespell') then
-		return
-	end
-
-	local file_path = vim.fn.expand('%:p')
-	local output = vim.fn.execute('!codespell ' .. file_path)
-
-	if output then
-		-- print(vim.fn.match(output, '(^/.*:\\d:\\s*)\\@<=\\w*'))
-		print(vim.fn.matchstr(output, '(/.*:\\d*:\\s*)\\@<=\\w*'))
 	end
 end
 

@@ -18,31 +18,18 @@ autocmd({ 'BufNewFile', 'BufRead' }, {
 	end,
 })
 
-autocmd({ 'FocusGained', 'BufEnter', 'BufWritePost' }, {
+local refresh_group = vim.api.nvim_create_augroup('core_refresh', { clear = true })
+autocmd({ 'FocusGained', 'BufEnter' }, {
 	desc = 'Refresh buffer',
+	group = refresh_group,
 	pattern = '*',
-	callback = function()
+	callback = function(args)
 		-- Highlight vertical tab as error
 		vim.api.nvim_command('match RedSign /\\%x0b/')
 
-		if not opt.buftype:get() then
-			vim.api.nvim_command('checktime')
+		if vim.bo[args.buf].buftype == '' then
+			vim.cmd.checktime({ args = { tostring(args.buf) } })
 		end
-	end,
-})
-
-autocmd('BufWritePost', {
-	pattern = vim.fn.stdpath('config') .. '/*',
-	callback = function()
-		vim.cmd.source(vim.env.MYVIMRC)
-	end,
-})
-
-autocmd({ 'BufRead', 'BufNewFile' }, {
-	desc = 'Auto format xml buffer',
-	pattern = '*.xml',
-	callback = function()
-		utils.expand_xml_tags()
 	end,
 })
 
@@ -82,15 +69,6 @@ autocmd({ 'BufRead', 'BufNewFile' }, {
 	desc = 'Init rasi syntax',
 	pattern = '*.rasi',
 	callback = require('syntax.rasi'),
-})
-
--- Basic autoindent for filetypes without a plugin
-autocmd({ 'BufWritePre' }, {
-	desc = 'Autoformat',
-	pattern = '*.svg',
-	callback = function()
-		utils.autoindent()
-	end,
 })
 
 -- local function match_redundant_spaces()
