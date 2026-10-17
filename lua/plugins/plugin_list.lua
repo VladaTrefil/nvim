@@ -299,7 +299,7 @@ return {
 	{
 		'stevearc/conform.nvim',
 		lazy = true,
-		event = 'BufWrite',
+		event = 'BufWritePre',
 		config = function()
 			require('plugins.config._conform')
 		end,

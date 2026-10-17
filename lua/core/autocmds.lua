@@ -76,15 +76,6 @@ autocmd({ 'BufRead', 'BufNewFile' }, {
 	callback = require('syntax.rasi'),
 })
 
--- Basic autoindent for filetypes without a plugin
-autocmd({ 'BufWritePre' }, {
-	desc = 'Autoformat',
-	pattern = '*.svg',
-	callback = function()
-		utils.autoindent()
-	end,
-})
-
 -- local function match_redundant_spaces()
 --   vim.fn.matchadd('RedundantSpaces', '\\s\\+$')
 -- end
