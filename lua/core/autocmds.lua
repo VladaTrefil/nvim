@@ -18,15 +18,17 @@ autocmd({ 'BufNewFile', 'BufRead' }, {
 	end,
 })
 
-autocmd({ 'FocusGained', 'BufEnter', 'BufWritePost' }, {
+local refresh_group = vim.api.nvim_create_augroup('core_refresh', { clear = true })
+autocmd({ 'FocusGained', 'BufEnter' }, {
 	desc = 'Refresh buffer',
+	group = refresh_group,
 	pattern = '*',
-	callback = function()
+	callback = function(args)
 		-- Highlight vertical tab as error
 		vim.api.nvim_command('match RedSign /\\%x0b/')
 
-		if not opt.buftype:get() then
-			vim.api.nvim_command('checktime')
+		if vim.bo[args.buf].buftype == '' then
+			vim.cmd.checktime({ args = { tostring(args.buf) } })
 		end
 	end,
 })

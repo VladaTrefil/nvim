@@ -3,19 +3,11 @@ local M = {}
 local utils = require('core.utils')
 
 local function on_paste()
-	if vim.bo.filetype == 'yaml' then
-		vim.api.nvim_feedkeys('p', 'n', false)
-	else
-		utils.paste_as_insert()
-	end
+	return vim.bo.filetype == 'yaml' and 'p' or ']p'
 end
 
 local function on_paste_reverse()
-	if vim.bo.filetype == 'yaml' then
-		vim.api.nvim_feedkeys('P', 'n', false)
-	else
-		utils.paste_as_insert(true)
-	end
+	return vim.bo.filetype == 'yaml' and 'P' or '[p'
 end
 
 M.general = {
@@ -33,8 +25,8 @@ M.general = {
 
 		['J'] = { 'mzJ`z', 'Keep cursor when joining lines' },
 
-		['p'] = { on_paste, 'Paste as insert' },
-		['P'] = { on_paste_reverse, 'Paste as insert reverse' },
+		['p'] = { on_paste, 'Paste with adjusted indent', opts = { expr = true } },
+		['P'] = { on_paste_reverse, 'Paste before with adjusted indent', opts = { expr = true } },
 
 		['<ESC>'] = { utils.clear_ui, 'Clear UI', opts = { silent = true } },
 		['<BS>'] = { '<C-o>', 'Backspace goes back' },

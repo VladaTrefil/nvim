@@ -4,35 +4,6 @@ local statuscolumn = require('core.ui.statuscolumn')
 
 local fn = vim.fn
 local merge_tb = vim.tbl_deep_extend
-local register_name = vim.v.register
-
--- Counts number of lines in copy register
-M.line_count_in_register = function()
-	local register = fn.getreg(vim.v.register, nil, true)
-
-	if type(register) == 'table' then
-		return vim.tbl_count(register)
-	else
-		return 1
-	end
-end
-
--- true/false if line under the cursor is blank
-M.is_line_blank = function()
-	local line = fn.getline('.')
-	return fn.match(line, '^\\s*$') == 0
-end
-
-M.register_ends_in_NL = function()
-	local register = fn.getreg(vim.v.register)
-	return fn.match(register, '\n$') > -1
-end
-
--- true/false if copy register contains block of text
-M.register_contains_block = function()
-	local register_type = fn.getregtype(register_name)
-	return register_type == 'V' and M.register_ends_in_NL()
-end
 
 -- makes string safe for nvim commands
 M.termcodes = function(str)
@@ -133,38 +104,6 @@ M.fold_label_text = function()
 	local spacer = fn['repeat']({ '.', spacer_size })
 
 	return ' ' .. text .. spacer .. ' (' .. fold_size .. ' L)  '
-end
-
-M.paste_as_insert = function(reverse)
-	local base = '<c-r><c-p>+<esc>'
-	local before_cmd = ''
-	local after_cmd = ''
-
-	-- Register has linewise text
-	if M.register_contains_block() then
-		if reverse then
-			before_cmd = 'O'
-		else
-			before_cmd = 'o'
-		end
-
-		local line_count = M.line_count_in_register()
-		after_cmd = '"xdd' .. line_count .. 'k'
-	-- Register has blockwise or charwise text
-	else
-		if M.is_line_blank() then
-			before_cmd = '"xS'
-		else
-			if reverse then
-				before_cmd = 'i'
-			else
-				before_cmd = 'a'
-			end
-		end
-	end
-
-	local keys = M.termcodes(before_cmd .. base .. after_cmd)
-	vim.api.nvim_feedkeys(keys, 'n', false)
 end
 
 M.is_available = function(plugin)

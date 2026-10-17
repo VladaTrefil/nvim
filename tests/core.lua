@@ -1,6 +1,7 @@
 vim.opt.runtimepath:prepend(vim.fn.getcwd())
 vim.cmd('filetype indent on')
 vim.cmd('syntax enable')
+vim.o.report = 9999
 
 local failures = {}
 
@@ -112,3 +113,87 @@ check(conform_plugin and conform_plugin.event == 'BufWritePre', 'Conform must lo
 
 assert(#failures == 0, table.concat(failures, '\n'))
 print('PASS: Conform owns synchronous SVG indentation')
+
+local refresh_path = scratch .. '/refresh.txt'
+vim.fn.writefile({ 'original' }, refresh_path)
+vim.cmd.edit({ args = { refresh_path }, bang = true })
+vim.o.autoread = true
+vim.fn.writefile({ 'changed externally' }, refresh_path)
+local future = os.time() + 2
+vim.uv.fs_utime(refresh_path, future, future)
+vim.api.nvim_exec_autocmds('FocusGained', {})
+check(
+	vim.api.nvim_get_current_line() == 'changed externally',
+	'FocusGained must reload an externally changed file'
+)
+
+local nofile_buf = vim.api.nvim_create_buf(true, true)
+vim.api.nvim_set_current_buf(nofile_buf)
+vim.bo[nofile_buf].buftype = 'nofile'
+vim.api.nvim_buf_set_lines(nofile_buf, 0, -1, false, { 'scratch content' })
+local refresh_ok = pcall(vim.api.nvim_exec_autocmds, 'BufEnter', { buffer = nofile_buf })
+check(refresh_ok, 'buffer refresh must ignore non-file buffers without errors')
+check(
+	vim.api.nvim_get_current_line() == 'scratch content',
+	'buffer refresh must not alter non-file buffers'
+)
+
+local utils = require('core.utils')
+local general_mappings = require('core.mappings').general
+utils.load_mappings({
+	n = {
+		p = general_mappings.n.p,
+		P = general_mappings.n.P,
+	},
+})
+
+local function paste_buffer(filetype)
+	local bufnr = vim.api.nvim_create_buf(true, true)
+	vim.api.nvim_set_current_buf(bufnr)
+	vim.bo[bufnr].filetype = filetype
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { '  anchor' })
+	vim.api.nvim_win_set_cursor(0, { 1, 0 })
+	return bufnr
+end
+
+local function feedkeys(keys)
+	vim.api.nvim_feedkeys(utils.termcodes(keys), 'mx', false)
+end
+
+vim.fn.setreg('a', { 'alpha', 'beta' }, 'V')
+local paste_after_buf = paste_buffer('lua')
+feedkeys('"a2p')
+check(
+	vim.deep_equal(vim.api.nvim_buf_get_lines(paste_after_buf, 0, -1, false), {
+		'  anchor',
+		'  alpha',
+		'  beta',
+		'  alpha',
+		'  beta',
+	}),
+	'paste after must preserve an explicit register and count while adjusting indentation'
+)
+
+local paste_before_buf = paste_buffer('lua')
+feedkeys('"a2P')
+check(
+	vim.deep_equal(vim.api.nvim_buf_get_lines(paste_before_buf, 0, -1, false), {
+		'  alpha',
+		'  beta',
+		'  alpha',
+		'  beta',
+		'  anchor',
+	}),
+	'paste before must preserve an explicit register and count while adjusting indentation'
+)
+
+vim.fn.setreg('a', { 'alpha' }, 'V')
+local yaml_buf = paste_buffer('yaml')
+feedkeys('"ap')
+check(
+	vim.deep_equal(vim.api.nvim_buf_get_lines(yaml_buf, 0, -1, false), { '  anchor', 'alpha' }),
+	'YAML paste must retain ordinary paste indentation and the explicit register'
+)
+
+assert(#failures == 0, table.concat(failures, '\n'))
+print('PASS: buffer refresh and native paste preserve Neovim semantics')
