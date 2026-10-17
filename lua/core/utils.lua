@@ -196,14 +196,34 @@ M.notify = function(msg, log, opts)
 	end
 end
 
--- Expands xml tags to next lines
-M.expand_xml_tags = function()
-	vim.cmd([[%s/></>\r</ge]])
+local function with_saved_view(bufnr, callback)
+	if bufnr == nil or bufnr == 0 then
+		bufnr = vim.api.nvim_get_current_buf()
+	end
+	local is_current_buffer = bufnr == vim.api.nvim_get_current_buf()
+	local view = is_current_buffer and vim.fn.winsaveview() or nil
+
+	vim.api.nvim_buf_call(bufnr, callback)
+
+	if view then
+		vim.fn.winrestview(view)
+	end
 end
 
--- Auto indents entire file
-M.autoindent = function()
-	vim.fn.feedkeys("gg=G''")
+local function indent_buffer()
+	vim.cmd.normal({ args = { 'gg=G' }, bang = true })
+end
+
+-- Auto indents an entire buffer synchronously.
+M.autoindent = function(bufnr)
+	with_saved_view(bufnr, indent_buffer)
+end
+
+M.format_xml = function(bufnr)
+	with_saved_view(bufnr, function()
+		vim.cmd([[%s/></>\r</ge]])
+		indent_buffer()
+	end)
 end
 
 -- Creates a directory if it doesn't exist

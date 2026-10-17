@@ -38,14 +38,6 @@ autocmd('BufWritePost', {
 	end,
 })
 
-autocmd({ 'BufRead', 'BufNewFile' }, {
-	desc = 'Auto format xml buffer',
-	pattern = '*.xml',
-	callback = function()
-		utils.expand_xml_tags()
-	end,
-})
-
 autocmd({ 'BufWritePre', 'FileWritePre' }, {
 	desc = 'Auto mkdir for missing directory',
 	pattern = '*',
