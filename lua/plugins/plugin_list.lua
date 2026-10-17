@@ -273,13 +273,6 @@ return {
 	},
 
 	{
-		'brooth/far.vim',
-		config = function()
-			require('plugins.config.far')
-		end,
-	},
-
-	{
 		'nvim-pack/nvim-spectre',
 		config = function()
 			require('plugins.config.spectre')
@@ -296,20 +289,9 @@ return {
 	{
 		'nvim-neotest/neotest',
 		dependencies = {
-			'nvim-lua/plenary.nvim',
+			'nvim-neotest/nvim-nio',
 			'antoinemadec/FixCursorHold.nvim',
-			'nvim-treesitter/nvim-treesitter',
-			'VladaTrefil/neotest-minitest',
-			{
-				'stevearc/overseer.nvim',
-				config = function()
-					require('overseer').setup()
-				end,
-			},
 		},
-		config = function()
-			require('plugins.config._neotest')
-		end,
 	},
 
 	{
@@ -388,7 +370,6 @@ return {
 		end,
 	},
 
-	{ 'drzel/vim-repo-edit' },
 	{ 'tpope/vim-git' },
 	{ 'tpope/vim-fugitive' },
 
@@ -434,7 +415,6 @@ return {
 		end,
 	},
 
-	---- this shit
 	{ 'rhysd/clever-f.vim' },
 
 	{
@@ -453,20 +433,10 @@ return {
 
 	{ 'RRethy/vim-illuminate' },
 
-	{
-		'norcalli/nvim-colorizer.lua',
-		config = function()
-			require('plugins.config._colorizer')
-		end,
-	},
-
-	{ 'mattn/emmet-vim' },
-	{ 'wavded/vim-stylus' },
 	{ 'jasonshell/vim-svg-indent' },
 	{ 'vim-scripts/svg.vim' },
 	{ 'tpope/vim-eunuch' },
 	{ 'mboughaba/i3config.vim' },
-	{ 'kchmck/vim-coffee-script' },
 
 	{
 		'FabijanZulj/blame.nvim',
