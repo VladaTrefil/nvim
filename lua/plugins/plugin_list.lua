@@ -5,36 +5,31 @@ return {
 	{
 		'nvim-treesitter/nvim-treesitter',
 		lazy = false,
-		build = function(plugin)
-			-- Fresh installs need both the runtime path and a fresh module index.
-			vim.opt.rtp:prepend(plugin.dir)
-			require('lazy.core.cache').reset(plugin.dir)
-			require('nvim-treesitter').update():wait(300000)
-		end,
+		build = require('plugins.config._treesitter.build'),
 		branch = 'main',
 		config = function()
-			require('plugins.config.treesitter')
+			require('plugins.config._treesitter')
 		end,
 	},
 
 	{
 		'kyazdani42/nvim-web-devicons',
 		config = function()
-			require('nvim-web-devicons').setup()
+			require('plugins.config._web_devicons')
 		end,
 	},
 
 	{
 		'Shatur/neovim-session-manager',
 		config = function()
-			require('plugins.config.session_manager')
+			require('plugins.config._session_manager')
 		end,
 	},
 
 	{
 		'goolord/alpha-nvim',
 		config = function()
-			require('plugins.config.alpha')
+			require('plugins.config._alpha')
 		end,
 	},
 
@@ -218,42 +213,7 @@ return {
 			},
 		},
 		config = function()
-			local colors = require('theme.colors')
-			local utils = require('core.utils')
-
-			local highlights = {
-				-- SnacksPicker
-				NormalFloat = { bg = colors.dark, fg = colors.light0 },
-
-				SnacksBackdrop = { fg = colors.dark, bg = colors.dark, blend = 100 },
-
-				SnacksPicker = { fg = colors.dark, bg = colors.dark },
-				SnacksPickerBorder = { fg = colors.dark, bg = colors.dark },
-				SnacksPickerInputBorder = { link = 'SnacksPickerBorder' },
-				SnacksPickerDir = { fg = colors.light1 },
-				SnacksPickerDirectory = { fg = colors.light1 },
-				SnacksPickerFile = { fg = colors.light0 },
-				SnacksPickerGitStatusAdded = { fg = colors.bright_green, bg = colors.dark },
-				SnacksPickerGitStatusIgnored = { fg = colors.light4 },
-				SnacksPickerGitStatusModified = { fg = colors.yellow },
-				SnacksPickerGitStatusRenamed = { fg = colors.yellow },
-				SnacksPickerGitStatusStaged = { fg = colors.green, bg = colors.dark },
-				SnacksPickerGitStatusUnmerged = { fg = colors.orange },
-				SnacksPickerGitStatusUntracked = { fg = colors.light2 },
-				SnacksPickerInput = { link = 'NormalFloat' },
-				SnacksPickerMatch = { fg = colors.bright_yellow, bg = colors.dark1, italic = true },
-				SnacksPickerPathHidden = { fg = colors.light4 },
-				SnacksPickerPrompt = { fg = colors.blue },
-				SnacksPickerTitle = { fg = colors.aqua, bold = true },
-
-				SnacksPickerListCursorLine = { link = 'CursorLine' },
-				SnacksPickerPreviewCursorLine = { link = 'CursorLine' },
-
-				SnacksPickerPreview = { bg = colors.dark0 },
-				SnacksPickerPreviewBorder = { bg = colors.dark0, fg = colors.dark0 },
-			}
-
-			utils.set_highlights(highlights)
+			require('plugins.config._snacks')
 		end,
 	},
 
@@ -261,28 +221,28 @@ return {
 		'rcarriga/nvim-notify',
 		dependencies = { 'kyazdani42/nvim-web-devicons' },
 		config = function()
-			require('plugins.config.notify')
+			require('plugins.config._notify')
 		end,
 	},
 
 	{
 		'folke/which-key.nvim',
 		config = function()
-			require('plugins.config.whichkey')
+			require('plugins.config._whichkey')
 		end,
 	},
 
 	{
 		'nvim-pack/nvim-spectre',
 		config = function()
-			require('plugins.config.spectre')
+			require('plugins.config._spectre')
 		end,
 	},
 
 	{
 		'SirVer/ultisnips',
 		config = function()
-			require('plugins.config.ultisnips')
+			require('plugins.config._ultisnips')
 		end,
 	},
 
@@ -303,7 +263,7 @@ return {
 			'nvim-treesitter/nvim-treesitter',
 		},
 		config = function()
-			require('plugins.config.codecompanion')
+			require('plugins.config._codecompanion')
 		end,
 	},
 
@@ -316,15 +276,7 @@ return {
 			},
 		},
 		config = function()
-			local colors = require('theme.colors')
-			local utils = require('core.utils')
-
-			local highlights = {
-				RenderMarkdownCodeBlock = { bg = colors.dark0 },
-				RenderMarkdownCode = { bg = colors.dark0 },
-			}
-
-			utils.set_highlights(highlights)
+			require('plugins.config._render_markdown')
 		end,
 	},
 
@@ -366,7 +318,7 @@ return {
 			'quangnguyen30192/cmp-nvim-ultisnips',
 		},
 		config = function()
-			require('plugins.config.cmp')
+			require('plugins.config._cmp')
 		end,
 	},
 
@@ -404,7 +356,7 @@ return {
 	{
 		'windwp/nvim-autopairs',
 		config = function()
-			require('plugins.config.autopairs')
+			require('plugins.config._autopairs')
 		end,
 	},
 
@@ -442,7 +394,7 @@ return {
 		'FabijanZulj/blame.nvim',
 		lazy = false,
 		config = function()
-			require('blame').setup({})
+			require('plugins.config._blame')
 		end,
 	},
 }

@@ -2,8 +2,8 @@ local M = {}
 
 local cmp = require('cmp')
 
-local cmp_utils = require('plugins.config.cmp.utils')
-local mappings = require('plugins.config.cmp.mappings')
+local cmp_utils = require('plugins.config._cmp.utils')
+local mappings = require('plugins.config._cmp.mappings')
 
 local WIDE_HEIGHT = 40
 

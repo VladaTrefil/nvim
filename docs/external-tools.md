@@ -40,28 +40,28 @@ rc owns its ignore/exclusion inputs, so this editor passes only `--config`.
 | Binary | Consumer (repository file:line) | Requirement | Likely Fedora source |
 |---|---|---|---|
 | `nvim` | `tests/run.sh:10`; `init.lua:21` | Required; locked Treesitter documents Neovim 0.12+ | dnf `neovim`; available version unverified |
-| `git` | `lua/plugins/bootstrap.lua:8`; `tests/bootstrap.lua:6`; Git plugins in `lua/plugins/plugin_list.lua:373` | Required for plugin bootstrap; also Git features | dnf `git` |
+| `git` | `lua/plugins/bootstrap.lua:8`; `tests/bootstrap.lua:6`; Git plugins in `lua/plugins/plugin_list.lua:325` | Required for plugin bootstrap; also Git features | dnf `git` |
 | `lazygit` | `lua/plugins/config/git/init.lua:5-9` | Optional; required for the configured LazyGit integration | Checksum-pinned upstream release; absent from Fedora 44 repositories |
-| `curl` | Parser install at `lua/plugins/config/treesitter.lua:32`; HTTP adapter at `lua/plugins/config/codecompanion.lua:34` | Required for fresh parsers; optional for AI requests | dnf `curl` |
-| `tar`, `gzip` | Parser install at `lua/plugins/config/treesitter.lua:32` (plugin extracts `.tar.gz` with `tar -xzf`) | Required for fresh parsers | dnf `tar`, `gzip` |
-| `tree-sitter` | Parser install at `lua/plugins/config/treesitter.lua:32`; build at `lua/plugins/plugin_list.lua:8` | Required to build parsers; locked plugin documents CLI 0.26.1+ | dnf `tree-sitter-cli` candidate; name/version unverified; not npm |
-| `cc` (or a supported C compiler, e.g. `gcc`/`clang`) | Parser compilation triggered by `lua/plugins/config/treesitter.lua:32` | Required to build parsers | dnf `gcc` or `clang` |
+| `curl` | Parser install at `lua/plugins/config/_treesitter/init.lua:32`; HTTP adapter at `lua/plugins/config/_codecompanion.lua:34` | Required for fresh parsers; optional for AI requests | dnf `curl` |
+| `tar`, `gzip` | Parser install at `lua/plugins/config/_treesitter/init.lua:32` (plugin extracts `.tar.gz` with `tar -xzf`) | Required for fresh parsers | dnf `tar`, `gzip` |
+| `tree-sitter` | Parser install at `lua/plugins/config/_treesitter/init.lua:32`; build at `lua/plugins/plugin_list.lua:8` | Required to build parsers; locked plugin documents CLI 0.26.1+ | dnf `tree-sitter-cli` candidate; name/version unverified; not npm |
+| `cc` (or a supported C compiler, e.g. `gcc`/`clang`) | Parser compilation triggered by `lua/plugins/config/_treesitter/init.lua:32` | Required to build parsers | dnf `gcc` or `clang` |
 | `bash`, `sh` | `tests/run.sh:1`, `tests/with-isolated-xdg.sh:1`; shell commands in `legacy/script.vim:7` | Required for the test scripts and shell-backed features | dnf `bash` |
 | `env`, `dirname`, `mktemp`, `mkdir`, `chmod`, `ln`, `rm` | `tests/with-isolated-xdg.sh:4`, `:5`, `:6`, `:10`, `:11`, `:12`, `:16`; `legacy/script.vim:27` | Required for test isolation; `rm` also used by the explicit cell-removal command | dnf `coreutils` |
-| `rg` | Search pickers at `lua/plugins/plugin_list.lua:103`; `lua/plugins/config/spectre.lua:1` | Optional; required for configured ripgrep search | dnf `ripgrep`; the `BurntSushi/ripgrep` plugin spec only clones sources, it does not supply the binary |
-| `fd` or `find` (with `rg` as another picker fallback) | File pickers at `lua/plugins/plugin_list.lua:85`, `:96` (Snacks defaults) | Optional file-discovery alternatives | dnf `fd-find` or `findutils`; exact fallback order is plugin-dependent |
-| `sed` | `lua/plugins/config/spectre.lua:1` (Spectre's default replacement engine) | Optional; required for Spectre replacement | dnf `sed` |
-| `python3` | UltiSnips plugin at `lua/plugins/plugin_list.lua:283`; Python snippets in `ultisnips/all.snippets:44` | Optional; required for Python-backed snippets, with the Neovim Python provider | dnf `python3`, plus `python3-neovim`/pynvim provider package (name unverified) |
+| `rg` | Search pickers at `lua/plugins/plugin_list.lua:98`; `lua/plugins/config/_spectre.lua:1` | Optional; required for configured ripgrep search | dnf `ripgrep`; the `BurntSushi/ripgrep` plugin spec only clones sources, it does not supply the binary |
+| `fd` or `find` (with `rg` as another picker fallback) | File pickers at `lua/plugins/plugin_list.lua:80`, `:91` (Snacks defaults) | Optional file-discovery alternatives | dnf `fd-find` or `findutils`; exact fallback order is plugin-dependent |
+| `sed` | `lua/plugins/config/_spectre.lua:1` (Spectre's default replacement engine) | Optional; required for Spectre replacement | dnf `sed` |
+| `python3` | UltiSnips plugin at `lua/plugins/plugin_list.lua:243`; Python snippets in `ultisnips/all.snippets:44` | Optional; required for Python-backed snippets, with the Neovim Python provider | dnf `python3`, plus `python3-neovim`/pynvim provider package (name unverified) |
 | `node` | ESLint server at `lua/lsp/new.lua:71`; JavaScript lint/format tools below | Optional runtime; required by the relevant npm-distributed tools | dnf `nodejs` |
-| `npm` | `lua/plugins/plugin_list.lua:364` installs cmp-npm, whose plugin code invokes npm | Optional completion capability; the current completion-source list does not enable `npm` | dnf `npm` candidate, or Node packaging; unverified |
+| `npm` | `lua/plugins/plugin_list.lua:316` installs cmp-npm, whose plugin code invokes npm | Optional completion capability; the current completion-source list does not enable `npm` | dnf `npm` candidate, or Node packaging; unverified |
 | `ruby` | `lua/plugins/config/_lint/rubocop.lua:37` | Optional runtime; required by Ruby tooling | dnf `ruby` |
 | `bundle` | `lua/plugins/config/_lint/rubocop.lua:37`; `lua/plugins/config/_conform/rubocop.lua:45` | Optional; required for bundled Ruby lint/format/tests | dnf `rubygem-bundler` candidate or gem `bundler` |
 | `rails`, project `bin/rails` | `lua/rails_test/init.lua:61`; `legacy/script.vim:7` | Optional; required only for Rails commands, not the parser specs | Project Rails gem/binstub; gem `rails` (dnf availability unverified) |
 | `dolphin` | `lua/core/mappings.lua:43` | Optional explicit file-manager shortcut | dnf `dolphin` |
-| `man` | `lua/plugins/plugin_list.lua:153` | Optional manual-page picker | dnf `man-db` |
+| `man` | `lua/plugins/plugin_list.lua:148` | Optional manual-page picker | dnf `man-db` |
 | `xdg-open` or `gio` | `lua/lsp/new.lua:109` (`vim.ui.open`) | Optional desktop URL opener | dnf `xdg-utils` or `glib2` candidate |
 | `wl-copy`, `wl-paste` **or** `xclip`/`xsel` | `lua/core/options.lua:45` (`unnamedplus`) | Optional system-clipboard provider, depending on desktop/session | dnf `wl-clipboard`, `xclip` or `xsel` |
-| `magick` or `convert` | Snacks plugin at `lua/plugins/plugin_list.lua:57` | Optional runtime; required for Snacks image conversion and non-PNG image previews | dnf `ImageMagick` |
+| `magick` or `convert` | Snacks plugin at `lua/plugins/plugin_list.lua:52` | Optional runtime; required for Snacks image conversion and non-PNG image previews | dnf `ImageMagick` |
 
 The [locked Treesitter README](https://github.com/nvim-treesitter/nvim-treesitter/blob/4916d6592ede8c07973490d9322f187e07dfefac/README.md#requirements)
 specifies the parser-build prerequisites. The build callback enables the plugin runtime path,

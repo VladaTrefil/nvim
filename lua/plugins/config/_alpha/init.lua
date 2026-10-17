@@ -6,7 +6,7 @@ end
 
 local dashboard = require('alpha.themes.dashboard')
 local icons = require('core.icons')
-local alpha_utils = require('plugins.config.alpha.utils')
+local alpha_utils = require('plugins.config._alpha.utils')
 
 local button_config = {
 	{
@@ -14,7 +14,7 @@ local button_config = {
 		key = 'i',
 		icon = icons.Register,
 		name = 'Restore last session',
-		cmd = '<cmd> lua require("plugins.config.session_manager.utils").restore_session() <CR>',
+		cmd = '<cmd> lua require("plugins.config._session_manager.utils").restore_session() <CR>',
 	},
 	{
 		key = 'f',

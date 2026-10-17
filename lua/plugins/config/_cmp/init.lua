@@ -6,8 +6,8 @@ end
 
 local utils = require('core.utils')
 
-local theme = require('plugins.config.cmp.theme')
-local config = require('plugins.config.cmp.options')
+local theme = require('plugins.config._cmp.theme')
+local config = require('plugins.config._cmp.options')
 
 utils.set_highlights(theme)
 
@@ -16,8 +16,8 @@ cmp.setup.cmdline({ '/', '?' }, config.search_opts)
 cmp.setup.cmdline(':', config.cmd_opts)
 
 -- Register the custom sources
-cmp.register_source('style_variables', require('plugins.config.cmp.sources.style_variables').new())
-cmp.register_source('style_mixins', require('plugins.config.cmp.sources.style_mixins').new())
+cmp.register_source('style_variables', require('plugins.config._cmp.sources.style_variables').new())
+cmp.register_source('style_mixins', require('plugins.config._cmp.sources.style_mixins').new())
 
 vim.api.nvim_create_autocmd('BufWritePost', {
 	pattern = '*.snippets',
