@@ -195,6 +195,16 @@ check(
 	'YAML paste must retain ordinary paste indentation and the explicit register'
 )
 
+local yaml_before_buf = paste_buffer('yaml')
+feedkeys('"aP')
+check(
+	vim.deep_equal(
+		vim.api.nvim_buf_get_lines(yaml_before_buf, 0, -1, false),
+		{ 'alpha', '  anchor' }
+	),
+	'YAML paste before must retain ordinary paste indentation and the explicit register'
+)
+
 assert(#failures == 0, table.concat(failures, '\n'))
 print('PASS: buffer refresh and native paste preserve Neovim semantics')
 
