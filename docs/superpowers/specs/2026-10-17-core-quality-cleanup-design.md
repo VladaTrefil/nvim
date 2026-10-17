@@ -19,4 +19,3 @@ Replace the unsafe or obsolete core helpers identified in the review with explic
 - Do not add a host-level program or project dependency.
 - Preserve unrelated configuration behavior and existing user changes.
 - Keep tests runnable in the repository's isolated XDG environment.
-
